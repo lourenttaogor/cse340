@@ -4,3 +4,360 @@
 *:after {
   box-sizing: border-box;
 }
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f4f4f4;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ===================================
+   Container & Layout
+   =================================== */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* ===================================
+   Header Styles
+   =================================== */
+header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 20px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.tools a {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.tools a:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Navigation Styles */
+nav {
+  background-color: #2c3e50;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-list li {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.nav-list a {
+  display: block;
+  color: #ecf0f1;
+  padding: 15px 20px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.nav-list a:hover,
+.nav-list a.active {
+  background-color: #34495e;
+}
+
+/* Main Content */
+main {
+  padding: 30px 0;
+  min-height: calc(100vh - 200px);
+}
+
+/*Hero Section*/
+.hero-section {
+  background: linear-gradient(to right, #e0e0e0, #f5f5f5);
+  border: 10px solid #000;
+  border-image: repeating-linear-gradient(
+    45deg,
+    #000,
+    #000 20px,
+    #fff 20px,
+    #fff 40px
+  ) 10;
+  padding: 30px 20px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #00d4ff 0%, #0099ff 100%);
+}
+
+.hero-content h2 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.featured-vehicle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.vehicle-info {
+  text-align: center;
+}
+
+.vehicle-title {
+  font-size: 1.8rem;
+  color: #00bcd4;
+  margin-bottom: 15px;
+}
+
+.vehicle-features {
+  font-size: 1.1rem;
+  color: #00bcd4;
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+
+.vehicle-image img {
+  max-width: 500px;
+  width: 100%;
+}
+
+.btn-primary {
+  display: inline-block;
+  background-color: #00bcd4;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0097a7;
+  transform: translateY(-2px);
+}
+
+/* Upgrades & Reviews Section */
+.upgrades-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.upgrades-section h3,
+.reviews-section h3 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #667eea;
+  padding-bottom: 10px;
+}
+
+/* Upgrades Grid */
+.upgrades-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.upgrade-item {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upgrade-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.upgrade-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background-color: #00bcd4;
+}
+
+.upgrade-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.upgrade-item span {
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Reviews List */
+.reviews-section {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.reviews-list {
+  list-style: disc;
+  padding-left: 25px;
+}
+
+.reviews-list li {
+  color: #555;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ===================================
+   Footer Styles
+   =================================== */
+footer {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+}
+
+footer p {
+  font-size: 0.9rem;
+}
+
+/* ===================================
+   Media Queries - Tablet & Desktop
+   =================================== */
+@media screen and (min-width: 768px) {
+  header h1 {
+    font-size: 2.5rem;
+  }
+
+  .nav-list {
+    justify-content: flex-start;
+  }
+
+  .nav-list li {
+    flex: 0 1 auto;
+  }
+
+  .hero-content h2 {
+    font-size: 2.5rem;
+  }
+
+  .featured-vehicle {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vehicle-info {
+    text-align: left;
+    flex: 1;
+  }
+
+  .vehicle-image {
+    flex: 1;
+  }
+
+  .upgrades-reviews {
+    flex-direction: row;
+    gap: 40px;
+  }
+
+  .upgrades-section,
+  .reviews-section {
+    flex: 1;
+  }
+
+  .upgrades-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .upgrades-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ===================================
+   Accessibility & Focus Styles
+   =================================== */
+a:focus,
+button:focus {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #667eea;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
