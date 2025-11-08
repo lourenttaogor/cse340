@@ -11,7 +11,7 @@
             "server": "localhost",
             "driver": "PostgreSQL",
             "name": "render.com",
-            "connectString": "postgresql://demo123:s8lnoAKLYcIhYVH2I8aJvdD4kApxwbMD@dpg-d44ecqpr0fns73au79ng-a.oregon-postgres.render.com/demo123_ufw3"
+            "connectString": "postgresql://demo123:QkXsLO2NEI3rgVxYmVQJHiXw2pX6dLVw@dpg-d47no77gi27c73bt1mjg-a.oregon-postgres.render.com/demo123_zt7i"
         }
     ]
 }
