@@ -78,18 +78,18 @@ nav {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.nav-list {
+ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.nav-list li {
+ul li {
   flex: 1 1 auto;
   text-align: center;
 }
 
-.nav-list a {
+ul a {
   display: block;
   color: #ecf0f1;
   padding: 15px 20px;
@@ -97,8 +97,8 @@ nav {
   transition: background-color 0.3s ease;
 }
 
-.nav-list a:hover,
-.nav-list a.active {
+ul a:hover,
+ul a.active {
   background-color: #34495e;
 }
 

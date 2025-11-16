@@ -1,0 +1,18 @@
+<% if (title) { %>
+	<h1><%= title %></h1>
+<% } else { %>
+	<h1>Server Error</h1>
+<% } %>
+
+<section class="error-container">
+	<div class="container">
+		<p>Sorry — something went wrong. Here's the details we were given:</p>
+
+		<div class="error-message">
+			<%- message %>
+		</div>
+
+		<p>If you keep seeing this, contact the site administrator.</p>
+	</div>
+</section>
+
