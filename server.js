@@ -5,7 +5,7 @@
 /* ***********************
  * Require Statements
  *************************/
-const inventoryRoute = require("./routes/inventoryRoute")
+const inventoryRoute =  require("./routes/inventoryRoute")
 const baseController = require("./controllers/baseController")
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
@@ -29,6 +29,11 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
 app.use("/inv", inventoryRoute)
+
+// Test error route
+app.get("/error-test", (req, res, next) => {
+  next({status: 500, message: 'This is a test error message.'})
+})
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
