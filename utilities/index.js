@@ -58,6 +58,27 @@ Util.buildClassificationGrid = async function(data){
 }
 
 /* **************************************
+ * Build a select list of classifications
+ * Returns HTML for a <select> element with options
+ * Accepts an optional classification_id to mark selected
+ ************************************ */
+Util.buildClassificationList = async function (classification_id = null) {
+  let data = await invModel.getClassifications()
+  let classificationList =
+    '<select name="classification_id" id="classificationList" required>'
+  classificationList += "<option value=''>Choose a Classification</option>"
+  data.rows.forEach((row) => {
+    classificationList += '<option value="' + row.classification_id + '"'
+    if (classification_id != null && row.classification_id == classification_id) {
+      classificationList += ' selected '
+    }
+    classificationList += '>' + row.classification_name + '</option>'
+  })
+  classificationList += '</select>'
+  return classificationList
+}
+
+/* **************************************
 * Build the vehicle detail view HTML
 * ************************************ */
 Util.buildVehicleDetail = async function(data){
@@ -66,12 +87,16 @@ Util.buildVehicleDetail = async function(data){
   detail += '<img src="' + data.inv_image + '" alt="Image of ' + data.inv_make + ' ' + data.inv_model + ' on CSE Motors" />'
   detail += '</div>'
   detail += '<div class="detail-content">'
-  detail += '<h2>' + data.inv_make + ' ' + data.inv_model + '</h2>'
-  detail += '<p><strong>Year:</strong> ' + data.inv_year + '</p>'
-  detail += '<p><strong>Price:</strong> $' + new Intl.NumberFormat('en-US').format(data.inv_price) + '</p>'
-  detail += '<p><strong>Mileage:</strong> ' + new Intl.NumberFormat('en-US').format(data.inv_miles) + ' miles</p>'
-  detail += '<p><strong>Color:</strong> ' + data.inv_color + '</p>'
-  detail += '<p><strong>Description:</strong> ' + data.inv_description + '</p>'
+  // Prominent heading with year, make, model
+  detail += '<h2 class="vehicle-title">' + data.inv_year + ' ' + data.inv_make + ' ' + data.inv_model + '</h2>'
+  // Prominent price
+  detail += '<p class="vehicle-price"><strong>Price:</strong> <span class="price">$' + new Intl.NumberFormat('en-US').format(data.inv_price) + '</span></p>'
+  // Mileage
+  detail += '<p><strong>Mileage:</strong> <span class="miles">' + new Intl.NumberFormat('en-US').format(data.inv_miles) + '</span> miles (actual miles driven)</p>'
+  // Color
+  detail += '<p><strong>Color:</strong> <span class="color">' + data.inv_color + '</span> (exterior paint)</p>'
+  // Description
+  detail += '<p><strong>Description:</strong> <span class="desc">' + data.inv_description + '</span></p>'
   detail += '</div>'
   detail += '</div>'
   return detail

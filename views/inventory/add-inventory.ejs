@@ -1,0 +1,70 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<!-- Flash Messages -->
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<form action="/inv/add-inventory" method="post">
+  <div>
+    <label for="classificationList">Classification <span class="required">*</span></label>
+    <div><%= classificationList %></div>
+  </div>
+
+  <div>
+    <label for="inv_make">Make <span class="required">*</span></label>
+    <input type="text" id="inv_make" name="inv_make" required value="<%= typeof inv_make !== 'undefined' ? inv_make : '' %>">
+  </div>
+
+  <div>
+    <label for="inv_model">Model <span class="required">*</span></label>
+    <input type="text" id="inv_model" name="inv_model" required value="<%= typeof inv_model !== 'undefined' ? inv_model : '' %>">
+  </div>
+
+  <div>
+    <label for="inv_year">Year <span class="required">*</span></label>
+    <input type="text" id="inv_year" name="inv_year" required pattern="\d{4}" value="<%= typeof inv_year !== 'undefined' ? inv_year : '' %>">
+  </div>
+
+  <div>
+    <label for="inv_description">Description <span class="required">*</span></label>
+    <textarea id="inv_description" name="inv_description" required><%= typeof inv_description !== 'undefined' ? inv_description : '' %></textarea>
+  </div>
+
+  <div>
+    <label for="inv_image">Image Path <span class="required">*</span></label>
+    <input type="text" id="inv_image" name="inv_image" required value="<%= typeof inv_image !== 'undefined' ? inv_image : '/images/site/no-image-available.png' %>">
+  </div>
+
+  <div>
+    <label for="inv_thumbnail">Thumbnail Path <span class="required">*</span></label>
+    <input type="text" id="inv_thumbnail" name="inv_thumbnail" required value="<%= typeof inv_thumbnail !== 'undefined' ? inv_thumbnail : '/images/site/no-image-available-tn.png' %>">
+  </div>
+
+  <div>
+    <label for="inv_price">Price <span class="required">*</span></label>
+    <input type="number" id="inv_price" name="inv_price" required step="1" value="<%= typeof inv_price !== 'undefined' ? inv_price : '' %>">
+  </div>
+
+  <div>
+    <label for="inv_miles">Miles <span class="required">*</span></label>
+    <input type="number" id="inv_miles" name="inv_miles" required step="1" value="<%= typeof inv_miles !== 'undefined' ? inv_miles : '' %>">
+  </div>
+
+  <div>
+    <label for="inv_color">Color <span class="required">*</span></label>
+    <input type="text" id="inv_color" name="inv_color" required value="<%= typeof inv_color !== 'undefined' ? inv_color : '' %>">
+  </div>
+
+  <button type="submit">Add Vehicle</button>
+</form>
+
+<p><a href="/inv/">Back to Management</a></p>

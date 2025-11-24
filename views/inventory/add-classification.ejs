@@ -1,0 +1,25 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<!-- Flash Messages -->
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<form action="/inv/add-classification" method="post">
+  <div>
+    <label for="classification_name">Classification Name <span class="required">*</span></label>
+    <input type="text" id="classification_name" name="classification_name" required pattern="^[A-Za-z0-9]+$" aria-describedby="classHelp" value="<%= typeof classification_name !== 'undefined' ? classification_name : '' %>">
+    <small id="classHelp">No spaces or special characters allowed.</small>
+  </div>
+  <button type="submit">Add Classification</button>
+</form>
+
+<p><a href="/inv/">Back to Management</a></p>
