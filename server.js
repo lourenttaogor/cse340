@@ -32,7 +32,7 @@ const bodyParser = require("body-parser")
     createTableIfMissing: true,
     pool,
   }),
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'change-this-secret-key',
   resave: true,
   saveUninitialized: true,
   name: 'sessionId',
