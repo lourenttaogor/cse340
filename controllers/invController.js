@@ -35,8 +35,9 @@ invCont.buildAddClassification = async function (req, res, next) {
 invCont.addClassification = async function (req, res, next) {
   let nav = await utilities.getNav()
   const { classification_name } = req.body
-  const result = await invModel.addClassification(classification_name)
-  if (result && result.rowCount > 0) {
+  try {
+    const result = await invModel.addClassification(classification_name)
+    if (result && result.rowCount > 0) {
     req.flash('notice', `${classification_name} added successfully.`)
     // Rebuild nav so new classification appears
     nav = await utilities.getNav()
@@ -44,6 +45,16 @@ invCont.addClassification = async function (req, res, next) {
       title: 'Inventory Management',
       nav,
       message: req.flash(),
+    })
+  }
+  } catch (error) {
+    console.error('addClassification controller error: ', error)
+    req.flash('notice', 'Sorry, adding classification failed.')
+    return res.status(500).render('inventory/add-classification', {
+      title: 'Add Classification',
+      nav,
+      errors: null,
+      classification_name,
     })
   }
   req.flash('notice', 'Sorry, adding classification failed.')
@@ -75,8 +86,9 @@ invCont.buildAddInventory = async function (req, res, next) {
 invCont.addInventory = async function (req, res, next) {
   let nav = await utilities.getNav()
   const { classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } = req.body
-  const result = await invModel.addInventory(inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id)
-  if (result && result.rowCount > 0) {
+  try {
+    const result = await invModel.addInventory(inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id)
+    if (result && result.rowCount > 0) {
     req.flash('notice', `${inv_make} ${inv_model} added successfully.`)
     // render management with updated nav
     nav = await utilities.getNav()
@@ -84,6 +96,27 @@ invCont.addInventory = async function (req, res, next) {
       title: 'Inventory Management',
       nav,
       message: req.flash(),
+    })
+  }
+  } catch (error) {
+    console.error('addInventory controller error: ', error)
+    req.flash('notice', 'Sorry, adding inventory failed.')
+    const classificationList = await utilities.buildClassificationList(classification_id)
+    return res.status(500).render('inventory/add-inventory', {
+      title: 'Add Inventory',
+      nav,
+      classificationList,
+      errors: null,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id,
     })
   }
   // failure - show add-inventory with sticky values and error flash

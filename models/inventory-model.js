@@ -53,6 +53,7 @@ async function addClassification(classification_name) {
     return await pool.query(sql, [classification_name])
   } catch (error) {
     console.error("addClassification error " + error)
+    throw error
   }
 }
 
@@ -67,6 +68,7 @@ async function addInventory(inv_make, inv_model, inv_year, inv_description, inv_
     return await pool.query(sql, [inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id])
   } catch (error) {
     console.error("addInventory error " + error)
+    throw error
   }
 }
 
