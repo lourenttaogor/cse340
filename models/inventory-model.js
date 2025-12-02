@@ -42,6 +42,13 @@ async function getVehicleById(inv_id) {
   }
 }
 
+/* ***************************
+ *  Alias: Get inventory by id (same as getVehicleById)
+ * ************************** */
+async function getInventoryById(inv_id) {
+  return await getVehicleById(inv_id)
+}
+
  
 
 /* ***************************
@@ -72,4 +79,33 @@ async function addInventory(inv_make, inv_model, inv_year, inv_description, inv_
   }
 }
 
-module.exports = {getClassifications, getInventoryByClassificationId, getVehicleById, addClassification, addInventory};
+/* ***************************
+ *  Update an existing inventory item
+ * ************************** */
+async function updateInventory(inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id) {
+  try {
+    const sql = `UPDATE inventory SET inv_make=$2, inv_model=$3, inv_year=$4, inv_description=$5, inv_image=$6, inv_thumbnail=$7, inv_price=$8, inv_miles=$9, inv_color=$10, classification_id=$11 WHERE inv_id=$1 RETURNING *`
+    return await pool.query(sql, [inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id])
+  } catch (error) {
+    console.error("updateInventory error " + error)
+    throw error
+  }
+}
+
+/* ***************************
+ *  Delete Inventory Item
+ * ************************** */
+async function deleteInventoryItem(inv_id) {
+  try {
+    const sql = 'DELETE FROM inventory WHERE inv_id = $1 RETURNING *'
+    const data = await pool.query(sql, [inv_id])
+    return data
+  } catch (error) {
+    console.error('deleteInventoryItem error ' + error)
+    throw error
+  }
+}
+
+// remove duplicate function (kept earlier updateInventory which returns query result)
+
+module.exports = {getClassifications, getInventoryByClassificationId, getVehicleById, getInventoryById, addClassification, addInventory, updateInventory, deleteInventoryItem};

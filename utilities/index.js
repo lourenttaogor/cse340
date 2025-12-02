@@ -1,5 +1,7 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 // Simple function to escape HTML entities to prevent DOM XSS when building HTML strings
 function escapeHTML (str) {
@@ -16,7 +18,15 @@ function escapeHTML (str) {
  * Constructs the nav HTML unordered list
  ************************** */
 Util.getNav = async function (req, res, next) {
-  let data = await invModel.getClassifications()
+  let data
+  try {
+    data = await invModel.getClassifications()
+  } catch (error) {
+    console.error('getNav error', error)
+    // return a simple fallback nav
+    const fallback = "<ul><li><a href=\"/\" title=\"Home page\">Home</a></li></ul>"
+    return fallback
+  }
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
   data.rows.forEach((row) => {
@@ -74,7 +84,14 @@ Util.buildClassificationGrid = async function(data){
  * Accepts an optional classification_id to mark selected
  ************************************ */
 Util.buildClassificationList = async function (classification_id = null) {
-  let data = await invModel.getClassifications()
+  let data
+  try {
+    data = await invModel.getClassifications()
+  } catch (error) {
+    console.error('buildClassificationList error', error)
+    // Return a default empty select
+    return '<select name="classification_id" id="classificationList" required><option value="">Choose a Classification</option></select>'
+  }
   let classificationList =
     '<select name="classification_id" id="classificationList" required>'
   classificationList += "<option value=''>Choose a Classification</option>"
@@ -119,5 +136,77 @@ Util.buildVehicleDetail = async function(data){
  * General Error Handling
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+
+/* ****************************************
+* Middleware to check token validity
+**************************************** */
+Util.checkJWTToken = (req, res, next) => {
+ if (req.cookies && req.cookies.jwt) {
+  try {
+   jwt.verify(
+    req.cookies.jwt,
+    process.env.ACCESS_TOKEN_SECRET || 'development-secret',
+    function (err, accountData) {
+     if (err) {
+      // Token invalid or expired: clear cookie and continue without logging in
+      console.warn('JWT verify failed, clearing cookie')
+      res.clearCookie('jwt')
+      res.locals.loggedin = 0
+      return next()
+     }
+     res.locals.accountData = accountData
+     res.locals.loggedin = 1
+     return next()
+    }
+   )
+  } catch (error) {
+    console.error('checkJWTToken error:', error)
+    res.clearCookie('jwt')
+    res.locals.loggedin = 0
+    return next()
+  }
+ } else {
+  res.locals.loggedin = 0
+  return next()
+ }
+}
+
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+ Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next()
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+ }
+
+/* ****************************************
+ * Middleware to check account type permissions
+ * Allows an array of permitted types (e.g. ['Employee','Admin'])
+ **************************************** */
+Util.checkAccountType = function (permittedTypes = []) {
+  return (req, res, next) => {
+    const accountData = res.locals.accountData
+    if (!accountData || !accountData.account_type) {
+      req.flash('notice', 'Please log in')
+      return res.redirect('/account/login')
+    }
+    // If permittedTypes is empty, allow any logged in user
+    if (permittedTypes.length === 0) {
+      return next()
+    }
+    // Check if user's account_type is in the permittedTypes array
+    if (permittedTypes.includes(accountData.account_type)) {
+      return next()
+    }
+    // Not authorized
+    req.flash('notice', 'You do not have permission to access that page.')
+    return res.redirect('/account/login')
+  }
+}
+
 
 module.exports = Util

@@ -1,0 +1,36 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<!-- Flash Messages -->
+<%- messages() %>
+
+<p>Confirm Deletion - The delete is permanent.</p>
+
+<form action="/inv/delete" method="post">
+  <input type="hidden" name="inv_id" value="<%= inv_id %>">
+
+  <div>
+    <label for="inv_make">Make</label>
+    <input type="text" id="inv_make" name="inv_make" readonly value="<%= inv_make %>">
+  </div>
+
+  <div>
+    <label for="inv_model">Model</label>
+    <input type="text" id="inv_model" name="inv_model" readonly value="<%= inv_model %>">
+  </div>
+
+  <div>
+    <label for="inv_year">Year</label>
+    <input type="text" id="inv_year" name="inv_year" readonly value="<%= inv_year %>">
+  </div>
+
+  <div>
+    <label for="inv_price">Price</label>
+    <input type="text" id="inv_price" name="inv_price" readonly value="<%= inv_price %>">
+  </div>
+
+  <button type="submit">Delete Vehicle</button>
+</form>
+
+<p><a href="/inv/">Back to Management</a></p>

@@ -17,6 +17,7 @@ const static = require("./routes/static")
 const session = require("express-session")
 const pool = require('./database/')
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 
 
 /* ***********************
@@ -40,6 +41,8 @@ const bodyParser = require("body-parser")
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout") // not at views root
+app.use(cookieParser())
+
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -50,6 +53,8 @@ app.use(function(req, res, next){
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(utilities.checkJWTToken) 
 
 /* ***********************
  * Routes
@@ -79,7 +84,13 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  console.error(err.stack)
+  let message
+  if (err.status == 404) { 
+    message = err.message
+  } else {
+    message = 'Oh no! There was a crash. Maybe try a different route?'
+  }
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,

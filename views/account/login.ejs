@@ -1,22 +1,28 @@
 <% if (title) { %>
   <h1><%= title %></h1>
-<% } else {
-  res.redirect('/')
-} %>
+<% } %>
 
 <!-- Flash Messages -->
 <%- messages() %>
 
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
 <!-- Login Form -->
 <form id="loginForm" action="/account/login" method="post">
   <div>
-    <label for="email">Email Address</label>
-    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    <label for="account_email">Email Address</label>
+    <input type="email" id="account_email" name="account_email" placeholder="Enter your email" required value="<%= typeof account_email !== 'undefined' ? account_email : '' %>">
   </div>
 
   <div>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    <label for="account_password">Password</label>
+    <input type="password" id="account_password" name="account_password" placeholder="Enter your password" required>
   </div>
 
   <button type="submit">Sign In</button>

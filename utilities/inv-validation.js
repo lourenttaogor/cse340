@@ -43,6 +43,11 @@ validate.inventoryRules = () => {
   ]
 }
 
+// New inventory rules for update route (same as add rules)
+validate.newInventoryRules = () => {
+  return validate.inventoryRules()
+}
+
 validate.checkInventory = async (req, res, next) => {
   const { classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } = req.body
   const errors = validationResult(req)
@@ -55,6 +60,39 @@ validate.checkInventory = async (req, res, next) => {
       nav,
       errors,
       classificationList,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id,
+    })
+    return
+  }
+  next()
+}
+
+/* ******************************
+ * Check update data and return errors or continue to update
+ * Errors will be shown on the edit view
+ * ***************************** */
+validate.checkUpdateData = async (req, res, next) => {
+  const { inv_id, classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } = req.body
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let utilities = require('./index')
+    let nav = await utilities.getNav()
+    const classificationList = await utilities.buildClassificationList(classification_id)
+    res.render('inventory/edit-inventory', {
+      title: 'Edit Inventory',
+      nav,
+      errors,
+      classificationList,
+      inv_id,
       inv_make,
       inv_model,
       inv_year,
