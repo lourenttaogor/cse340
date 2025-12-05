@@ -17,6 +17,7 @@
 <% if (account) { %>
   <h2>Welcome <%= account.account_firstname %></h2>
   <p><a href="/account/update/<%= account.account_id %>">Update Account Information</a></p>
+  <p><a href="/account/delete/<%= account.account_id %>">Delete Account</a></p>
   <% if (account.account_type === 'Employee' || account.account_type === 'Admin') { %>
     <h3>Inventory Management</h3>
     <p><a href="/inv/">Manage Inventory</a></p>

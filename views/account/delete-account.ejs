@@ -1,0 +1,41 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<!-- Flash Messages -->
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<section class="account-delete">
+  <p class="warning">Warning: This action is permanent and cannot be undone. All your account information will be deleted.</p>
+
+  <form action="/account/delete" method="post">
+    <fieldset>
+      <legend>Delete Account Confirmation</legend>
+      <input type="hidden" name="account_id" value="<%= account_id %>">
+
+      <label for="account_firstname">First Name</label>
+      <input id="account_firstname" name="account_firstname" type="text" readonly value="<%= account_firstname %>">
+
+      <label for="account_lastname">Last Name</label>
+      <input id="account_lastname" name="account_lastname" type="text" readonly value="<%= account_lastname %>">
+
+      <label for="account_email">Email</label>
+      <input id="account_email" name="account_email" type="email" readonly value="<%= account_email %>">
+
+      <p class="confirmation-text">Type your email address to confirm deletion:</p>
+      <label for="confirm_email">Confirm Email</label>
+      <input id="confirm_email" name="confirm_email" type="email" required placeholder="Re-enter your email to confirm">
+
+      <button type="submit" class="btn-danger">Delete Account</button>
+      <a href="/account/" class="btn-cancel">Cancel</a>
+    </fieldset>
+  </form>
+</section>

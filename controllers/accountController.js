@@ -148,6 +148,8 @@ async function accountLogin(req, res) {
  *  Process logout (clear cookie and session)
  * *************************************** */
 async function accountLogout(req, res, next) {
+  // Set flash message BEFORE clearing session
+  req.flash('notice', 'You have been logged out.')
   // Clear JWT cookie and properly destroy session
   try {
     res.clearCookie('jwt')
@@ -159,11 +161,10 @@ async function accountLogout(req, res, next) {
           console.error('Error destroying session during logout:', err)
           return next(err)
         }
-        req.flash('notice', 'You have been logged out.')
+        // Session destroyed, now redirect
         return res.redirect('/')
       })
     } else {
-      req.flash('notice', 'You have been logged out.')
       return res.redirect('/')
     }
   } catch (error) {
@@ -281,4 +282,85 @@ async function updatePassword(req, res, next) {
   }
 }
 
-module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildAccount, accountLogout, buildAccountUpdate, updateAccount, updatePassword }
+/* ****************************************
+ *  Build account deletion confirmation view
+ * *************************************** */
+async function buildDeleteAccount(req, res, next) {
+  const account_id = parseInt(req.params.account_id)
+  const loggedIn = res.locals.accountData
+  // Ensure logged-in user is same as requested id or is Admin
+  if (!loggedIn || (loggedIn.account_id !== account_id && loggedIn.account_type !== 'Admin')) {
+    req.flash('notice', 'You are not authorized to delete that account.')
+    return res.redirect('/account/')
+  }
+  try {
+    const account = await accountModel.getAccountById(account_id)
+    if (!account) {
+      req.flash('notice', 'Account not found')
+      return res.redirect('/account/')
+    }
+    let nav = await utilities.getNav()
+    res.render('account/delete-account', {
+      title: 'Delete Account',
+      nav,
+      errors: null,
+      account_id: account.account_id,
+      account_firstname: account.account_firstname,
+      account_lastname: account.account_lastname,
+      account_email: account.account_email,
+    })
+  } catch (error) {
+    console.error('buildDeleteAccount error:', error)
+    next(error)
+  }
+}
+
+/* ****************************************
+ *  Process account deletion
+ * *************************************** */
+async function deleteAccount(req, res, next) {
+  const { account_id, confirm_email, account_email } = req.body
+  const id = parseInt(account_id)
+  const loggedIn = res.locals.accountData
+  
+  // Ensure logged-in user is same as requested id or is Admin
+  if (!loggedIn || (loggedIn.account_id !== id && loggedIn.account_type !== 'Admin')) {
+    req.flash('notice', 'You are not authorized to delete that account.')
+    return res.redirect('/account/')
+  }
+
+  // Verify email confirmation
+  if (!confirm_email || confirm_email.toLowerCase() !== account_email.toLowerCase()) {
+    req.flash('notice', 'Email confirmation does not match. Please try again.')
+    return res.redirect(`/account/delete/${id}`)
+  }
+
+  try {
+    const result = await accountModel.deleteAccount(id)
+    if (result && result.rowCount > 0) {
+      // Set flash message BEFORE destroying session
+      req.flash('notice', 'Account deleted successfully.')
+      // Clear cookies
+      res.clearCookie('jwt')
+      res.clearCookie('sessionId')
+      // Now destroy the session
+      if (req.session) {
+        req.session.destroy((err) => {
+          if (err) console.error('Error destroying session during account deletion:', err)
+          return res.redirect('/')
+        })
+      } else {
+        return res.redirect('/')
+      }
+    } else {
+      req.flash('notice', 'Account deletion failed.')
+      return res.redirect(`/account/delete/${id}`)
+    }
+  } catch (error) {
+    console.error('deleteAccount controller error:', error)
+    req.flash('notice', 'Account deletion failed.')
+    next(error)
+  }
+}
+
+module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildAccount, accountLogout, buildAccountUpdate, updateAccount, updatePassword, buildDeleteAccount, deleteAccount }

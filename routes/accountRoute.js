@@ -11,6 +11,7 @@ router.get("/login", utilities.handleErrors(accountController.buildLogin))
 router.get("/register", utilities.handleErrors(accountController.buildRegister))
 router.get('/logout', utilities.handleErrors(accountController.accountLogout))
 router.get('/update/:account_id', utilities.checkLogin, utilities.handleErrors(accountController.buildAccountUpdate))
+router.get('/delete/:account_id', utilities.checkLogin, utilities.handleErrors(accountController.buildDeleteAccount))
 
 
 // Process the registration data
@@ -34,5 +35,8 @@ router.post('/update', utilities.checkLogin, regValidate.updateRules(), regValid
 
 // Change password
 router.post('/password', utilities.checkLogin, regValidate.passwordRules(), regValidate.checkPasswordData, utilities.handleErrors(accountController.updatePassword))
+
+// Delete account
+router.post('/delete', utilities.checkLogin, utilities.handleErrors(accountController.deleteAccount))
 
 module.exports = router
